@@ -1,4 +1,5 @@
 import React, { useReducer } from 'react'
+import { useCreateTodoMutation } from '../state/todosApi'
 
 const CHANGE_LABEL = 'CHANGE_LABEL'
 const CHANGE_IS_COMPLETED = 'CHANGE_IS_COMPLETED'
@@ -20,6 +21,7 @@ const reducer = (state, action) => {
 
 export default function TodoForm() {
   const [state, dispatch] = useReducer(reducer, initialState)
+  const [createTodo] = useCreateTodoMutation()
 
   const onLabelChange = ({ target: { value } }) => {
     dispatch({ type: CHANGE_LABEL, payload: value })
@@ -34,6 +36,9 @@ export default function TodoForm() {
 
   const onNewTodo = async evt => {
     evt.preventDefault()
+    const {todoLabel: label, todoIsCompleted: complete} = state
+    createTodo({label, complete})
+    resetForm()
   }
 
   return (
